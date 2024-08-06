@@ -31,7 +31,10 @@ func configureDatabase(dsn string) (*gorm.DB, error) {
 		&models.AppUser{},
 		&models.TgUser{},
 		&models.Organization{},
+		&models.Product{},
+		&models.ProductProperty{},
 		&models.Order{},
+		&models.OrderItem{},
 	)
 
 	return db, nil
