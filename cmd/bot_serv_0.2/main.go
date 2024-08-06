@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/aafxr/bot-serv/internal/apiserver"
+	"github.com/aafxr/tg-bot-server/internal/apiserver"
 	"github.com/joho/godotenv"
 )
 

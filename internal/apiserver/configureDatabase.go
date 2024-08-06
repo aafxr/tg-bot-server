@@ -3,7 +3,7 @@ package apiserver
 import (
 	"time"
 
-	"github.com/aafxr/bot-serv/internal/models"
+	"github.com/aafxr/tg-bot-server/internal/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )

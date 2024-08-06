@@ -1,4 +1,4 @@
-module github.com/aafxr/bot-serv
+module github.com/aafxr/tg-bot-server
 
 go 1.22.5
 
