@@ -36,7 +36,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	b, err := botserver.NewBotServer()
+	b, err := botserver.NewBotServer(s)
 	if err != nil {
 		log.Fatal(err)
 	}
