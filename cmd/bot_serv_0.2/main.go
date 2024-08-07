@@ -6,6 +6,9 @@ import (
 	"os"
 
 	"github.com/aafxr/tg-bot-server/internal/apiserver"
+	"github.com/aafxr/tg-bot-server/internal/botserver"
+	"github.com/aafxr/tg-bot-server/internal/controllers"
+	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
@@ -32,6 +35,27 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	s.Start()
+
+	b, err := botserver.NewBotServer()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	go b.Run()
+
+	r := gin.New()
+
+	r.Use(gin.Logger())
+	r.Use(gin.Recovery())
+
+	r.GET("/catalog", controllers.GetCatalogHandler(s))
+	r.GET("/catalog/:product_id/details", controllers.GetProduct(s))
+
+	//info about user
+	r.POST("/user", controllers.GetUser(s))
+
+	if err := r.Run(os.Getenv("DOMAIN")); err != nil {
+		log.Fatal(err)
+	}
 
 }
