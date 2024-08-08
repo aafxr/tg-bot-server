@@ -8,6 +8,7 @@ import (
 	"github.com/aafxr/tg-bot-server/internal/apiserver"
 	"github.com/aafxr/tg-bot-server/internal/botserver"
 	"github.com/aafxr/tg-bot-server/internal/controllers"
+	"github.com/aafxr/tg-bot-server/internal/midlewares"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
@@ -48,6 +49,10 @@ func main() {
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
 
+	r.Use(midlewares.UserLoadMW(s))
+
+	r.Static("/assets", "./assets")
+
 	r.GET("/catalog", controllers.GetCatalogHandler(s))
 	r.GET("/catalog/:product_id/details", controllers.GetProduct(s))
 
@@ -55,8 +60,11 @@ func main() {
 	r.POST("/user", controllers.GetTGUser(s))
 	r.GET("/user/:user_id", controllers.GetAppUser(s))
 
+	r.POST("/session", controllers.StartSession(s))
+
+	r.GET("/test", controllers.Test)
+
 	if err := r.Run(os.Getenv("DOMAIN")); err != nil {
 		log.Fatal(err)
 	}
-
 }

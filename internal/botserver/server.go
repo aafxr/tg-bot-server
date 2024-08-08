@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/aafxr/tg-bot-server/internal/apiserver"
 	"github.com/aafxr/tg-bot-server/internal/models"
@@ -19,7 +18,7 @@ type BotServer struct {
 }
 
 func NewBotServer(s *apiserver.Server) (*BotServer, error) {
-	token := os.Getenv("BOT_TOKEN")
+	token := s.Token
 	if token == "" {
 		return nil, errors.New("token not found in .env")
 	}

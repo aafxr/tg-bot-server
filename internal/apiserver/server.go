@@ -1,11 +1,16 @@
 package apiserver
 
 import (
+	"os"
+
 	"gorm.io/gorm"
 )
 
 type Server struct {
-	DB *gorm.DB
+	DB         *gorm.DB
+	Token      string
+	SeeeionKey string
+	Domain     string
 }
 
 func NewServer(dsn string) (*Server, error) {
@@ -14,7 +19,12 @@ func NewServer(dsn string) (*Server, error) {
 		return nil, err
 	}
 
-	return &Server{DB: db}, nil
+	return &Server{
+		DB:         db,
+		Token:      os.Getenv("BOT_TOKEN"),
+		SeeeionKey: os.Getenv("SESSEION_KEY"),
+		Domain:     os.Getenv("DOMAIN"),
+	}, nil
 }
 
 func (s *Server) Start() {
