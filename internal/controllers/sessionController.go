@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
+	"log"
 	"net/http"
 	"net/url"
 	"sort"
@@ -50,7 +51,8 @@ func StartSession(s *apiserver.Server) func(*gin.Context) {
 		}
 
 		session := models.Session{AppUserId: u.ID, TgId: u.TgUser.ID}
-		if err := s.DB.Where("tg_id = ?", session.TgId).First(&session); err != nil {
+		if err := s.DB.Where("tg_id = ?", session.TgId).First(&session).Error; err != nil {
+			log.Println(err)
 			session.ID = uuid.New().String()
 			s.DB.Save(&session)
 		}
