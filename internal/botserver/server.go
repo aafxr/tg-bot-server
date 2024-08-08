@@ -102,7 +102,6 @@ func (b *BotServer) handleHelp(update tgbotapi.Update) {
 	`
 
 	chat := update.FromChat()
-	log.Println(chat.ID, text)
 	msg := tgbotapi.NewMessage(chat.ID, text)
 	b.Bot.Send(msg)
 }

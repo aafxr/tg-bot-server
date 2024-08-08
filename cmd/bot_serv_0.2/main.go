@@ -52,7 +52,8 @@ func main() {
 	r.GET("/catalog/:product_id/details", controllers.GetProduct(s))
 
 	//info about user
-	r.POST("/user", controllers.GetUser(s))
+	r.POST("/user", controllers.GetTGUser(s))
+	r.GET("/user/:user_id", controllers.GetAppUser(s))
 
 	if err := r.Run(os.Getenv("DOMAIN")); err != nil {
 		log.Fatal(err)
