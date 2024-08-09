@@ -34,6 +34,8 @@ func configureDatabase(dsn string) (*gorm.DB, error) {
 		&models.Session{},
 		&models.Product{},
 		&models.ProductProperty{},
+		&models.Storehouse{},
+		&models.StorehouseProduct{},
 		&models.Order{},
 		&models.OrderItem{},
 	)

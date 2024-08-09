@@ -11,4 +11,5 @@ type AppUser struct {
 	City          string         `josn:"city" gorm:"column:city;type:varchar(255)"`
 	TgUser        TgUser         `json:"tgUser,omitempty"`
 	Organizations []Organization `json:"organizations,omitempty"`
+	Orders        []Order        `json:"orders,omitempty"`
 }

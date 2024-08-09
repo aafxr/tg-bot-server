@@ -18,6 +18,8 @@ import (
 	"github.com/aafxr/tg-bot-server/internal/types"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 var (
@@ -46,6 +48,10 @@ func StartSession(s *apiserver.Server) func(*gin.Context) {
 		u.TgId = u.TgUser.ID
 
 		if err := s.DB.Model(&u).Preload("TgUser").Where(&u).First(&u).Error; err != nil {
+			if err == gorm.ErrRecordNotFound {
+				ctx.AbortWithStatusJSON(http.StatusNotFound, types.Response{Ok: false, Message: "User not found. Type /start in telegram chat bot "})
+				return
+			}
 			ctx.AbortWithStatusJSON(http.StatusNotFound, types.Response{Ok: false, Message: err.Error()})
 			return
 		}
@@ -54,7 +60,7 @@ func StartSession(s *apiserver.Server) func(*gin.Context) {
 		if err := s.DB.Where("tg_id = ?", session.TgId).First(&session).Error; err != nil {
 			log.Println(err)
 			session.ID = uuid.New().String()
-			s.DB.Save(&session)
+			s.DB.Omit(clause.Associations).Create(&session)
 		}
 
 		ctx.SetCookie(s.SeeeionKey, session.ID, 3600*24*365, "", s.Domain, true, true)

@@ -4,11 +4,15 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"slices"
+	"strings"
+	"time"
 
 	"github.com/aafxr/tg-bot-server/internal/apiserver"
 	"github.com/aafxr/tg-bot-server/internal/botserver"
 	"github.com/aafxr/tg-bot-server/internal/controllers"
 	"github.com/aafxr/tg-bot-server/internal/midlewares"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
@@ -46,6 +50,21 @@ func main() {
 
 	r := gin.New()
 
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"PUT", "PATCH"},
+		AllowHeaders:     []string{"Origin"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		AllowOriginFunc: func(origin string) bool {
+			slices.ContainsFunc([]string{"localhost", "postman"}, func(s string) bool {
+				return strings.Contains(origin, s)
+			})
+			return origin == "https://github.com"
+		},
+		MaxAge: 12 * time.Hour,
+	}))
+
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
 
@@ -56,13 +75,16 @@ func main() {
 	r.GET("/catalog", controllers.GetCatalogHandler(s))
 	r.GET("/catalog/:product_id/details", controllers.GetProduct(s))
 
-	//info about user
-	r.POST("/user", controllers.GetTGUser(s))
-	r.GET("/user/:user_id", controllers.GetAppUser(s))
-
 	r.POST("/session", controllers.StartSession(s))
 
 	r.GET("/test", controllers.Test)
+
+	authRouter := r.Group("")
+	authRouter.Use(midlewares.SessionCheckMW(s))
+	{
+		authRouter.POST("/user", controllers.GetTGUser(s))
+		authRouter.GET("/user/:user_id", controllers.GetAppUser(s))
+	}
 
 	if err := r.Run(os.Getenv("DOMAIN")); err != nil {
 		log.Fatal(err)
