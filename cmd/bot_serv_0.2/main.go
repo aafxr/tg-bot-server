@@ -78,6 +78,7 @@ func main() {
 	r.POST("/session", controllers.StartSession(s))
 
 	r.GET("/test", controllers.Test)
+	r.POST("/upload", controllers.UploadFile(s))
 
 	authRouter := r.Group("")
 	authRouter.Use(midlewares.SessionCheckMW(s))

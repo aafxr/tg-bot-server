@@ -34,13 +34,12 @@ func GetTGUser(s *apiserver.Server) func(*gin.Context) {
 func GetAppUser(s *apiserver.Server) func(*gin.Context) {
 	return func(ctx *gin.Context) {
 		data, ok := ctx.Get("user")
-		var user models.AppUser
-		user, ok = data.(models.AppUser)
-
 		if !ok {
 			ctx.AbortWithStatusJSON(http.StatusBadRequest, types.Response{Ok: false, Message: "unauthorizet"})
 			return
 		}
+		var user models.AppUser
+		user, ok = data.(models.AppUser)
 
 		ctx.JSON(http.StatusOK, user)
 
