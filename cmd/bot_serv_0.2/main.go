@@ -85,6 +85,8 @@ func main() {
 		// authRouter.POST("/user", controllers.GetTGUser(s))
 		authRouter.GET("/me", controllers.GetAppUser(s))
 		authRouter.GET("/myOrganizations", controllers.GetUserOrganizations(s))
+		authRouter.POST("/publishPost", controllers.PublicPost(s, b))
+
 	}
 
 	if err := r.Run(os.Getenv("DOMAIN")); err != nil {
