@@ -93,4 +93,5 @@ func main() {
 	if err := r.Run(os.Getenv("DOMAIN")); err != nil {
 		log.Fatal(err)
 	}
+
 }

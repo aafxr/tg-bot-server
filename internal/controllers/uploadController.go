@@ -17,7 +17,7 @@ func UploadFile(s *apiserver.Server) func(*gin.Context) {
 		if err != nil {
 			c.JSON(http.StatusOK, types.Response{
 				Ok:      false,
-				Message: err.Error() + " 20",
+				Message: err.Error(),
 			})
 			return
 		}

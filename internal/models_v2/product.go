@@ -1,4 +1,4 @@
-package models
+package modelsv2
 
 import "gorm.io/gorm"
 
@@ -9,5 +9,5 @@ type Product struct {
 	Currency   string  `json:"currency" gorm:"column:currency;"`
 	Price      float32 `json:"price" gorm:"column:price;"`
 	Preview    string  `json:"preview" gorm:"column:preview;"`
-	Properties []ProductProperty
+	Properties []Property
 }

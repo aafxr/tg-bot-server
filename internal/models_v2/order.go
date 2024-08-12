@@ -1,13 +1,14 @@
-package models
+package modelsv2
 
 import "gorm.io/gorm"
 
 type Order struct {
 	gorm.Model
-	ID             uint
 	Status         string `json:"status" gorm:"column:status;type:varchar(255);"`
 	Comment        string
-	StorehouseID   uint
-	AppUserID      uint
+	OrderItems     []OrderItem
+	TgUserID       uint
 	OrganizationID uint
+	StorehouseID   uint
+	Storehouse     Storehouse
 }

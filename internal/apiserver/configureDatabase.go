@@ -3,7 +3,7 @@ package apiserver
 import (
 	"time"
 
-	"github.com/aafxr/tg-bot-server/internal/models"
+	modelsv2 "github.com/aafxr/tg-bot-server/internal/models_v2"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -28,16 +28,16 @@ func configureDatabase(dsn string) (*gorm.DB, error) {
 	sqlDB.SetConnMaxLifetime(time.Hour)
 
 	db.AutoMigrate(
-		&models.AppUser{},
-		&models.TgUser{},
-		&models.Organization{},
-		&models.Session{},
-		&models.Product{},
-		&models.ProductProperty{},
-		&models.Storehouse{},
-		&models.StorehouseProduct{},
-		&models.Order{},
-		&models.OrderItem{},
+		&modelsv2.Order{},
+		&modelsv2.OrderItem{},
+		&modelsv2.AppUser{},
+		&modelsv2.TgUser{},
+		&modelsv2.Organization{},
+		&modelsv2.Session{},
+		&modelsv2.Product{},
+		&modelsv2.Property{},
+		&modelsv2.Storehouse{},
+		&modelsv2.StorehouseProduct{},
 	)
 
 	return db, nil
