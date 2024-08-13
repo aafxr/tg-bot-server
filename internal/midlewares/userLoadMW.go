@@ -2,7 +2,7 @@ package midlewares
 
 import (
 	"github.com/aafxr/tg-bot-server/internal/apiserver"
-	"github.com/aafxr/tg-bot-server/internal/models"
+	models "github.com/aafxr/tg-bot-server/internal/models_v2"
 	"github.com/gin-gonic/gin"
 )
 

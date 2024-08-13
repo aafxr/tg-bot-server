@@ -28,10 +28,10 @@ func configureDatabase(dsn string) (*gorm.DB, error) {
 	sqlDB.SetConnMaxLifetime(time.Hour)
 
 	db.AutoMigrate(
-		&modelsv2.Order{},
-		&modelsv2.OrderItem{},
 		&modelsv2.AppUser{},
 		&modelsv2.TgUser{},
+		&modelsv2.Order{},
+		&modelsv2.OrderItem{},
 		&modelsv2.Organization{},
 		&modelsv2.Session{},
 		&modelsv2.Product{},

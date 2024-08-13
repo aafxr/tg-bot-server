@@ -2,7 +2,7 @@ package modelsv2
 
 type Session struct {
 	ID        string
-	TgId      uint
+	TgUserID  uint
 	AppUserID uint
 	AppUser   AppUser
 }

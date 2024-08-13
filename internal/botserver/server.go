@@ -2,13 +2,10 @@ package botserver
 
 import (
 	"errors"
-	"fmt"
 	"log"
 
 	"github.com/aafxr/tg-bot-server/internal/apiserver"
-	"github.com/aafxr/tg-bot-server/internal/models"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	"gorm.io/gorm"
 )
 
 type BotServer struct {
@@ -49,67 +46,17 @@ func (b *BotServer) Run() {
 		if update.Message.IsCommand() {
 			switch update.Message.Command() {
 			case "start":
-				b.handleStart(update)
+				botServLog("./start", b.handleStart(update))
 			case "help":
-				b.handleHelp(update)
+				botServLog("/help", b.handleHelp(update))
+			case "companies":
+				botServLog("/companies", b.handleCompanies(update))
+			default:
+				botServLog("other", b.handleOtherComands(update))
 			}
 			continue
 		}
 
-		b.handleTextMessage(update)
+		botServLog(update.Message.Text, b.handleTextMessage(update))
 	}
-}
-
-func (b *BotServer) handleStart(update tgbotapi.Update) error {
-	u := update.SentFrom()
-	appUser := models.AppUser{TgId: uint(u.ID)}
-
-	res := b.s.DB.First(&appUser)
-	if res.Error != nil {
-		if res.Error != gorm.ErrRecordNotFound {
-			return res.Error
-		}
-		tgu := models.TgUser{
-			ID:        uint(u.ID),
-			FirstName: u.FirstName,
-			LastName:  u.LastName,
-			Nickname:  u.UserName,
-		}
-		appUser.TgUser = tgu
-		res := b.s.DB.Create(&appUser)
-		if res.Error != nil {
-			return res.Error
-		}
-	}
-
-	if err := b.s.DB.Model(&appUser).Association("TgUser").Find(&appUser.TgUser); err != nil {
-		return err
-	}
-
-	text := fmt.Sprintf("hello %s %s %s", appUser.TgUser.FirstName, appUser.TgUser.LastName, appUser.TgUser.Nickname)
-	msg := tgbotapi.NewMessage(update.FromChat().ID, text)
-	b.Bot.Send(msg)
-
-	return nil
-}
-
-func (b *BotServer) handleHelp(update tgbotapi.Update) {
-	text := `
-	доступны команды:
-	/start
-	/help
-	`
-
-	chat := update.FromChat()
-	msg := tgbotapi.NewMessage(chat.ID, text)
-	b.Bot.Send(msg)
-}
-
-func (b *BotServer) handleTextMessage(update tgbotapi.Update) {
-	logText("handleTextMessage " + update.Message.Text)
-
-}
-
-func logText(t string) {
-	log.Println(t)
 }

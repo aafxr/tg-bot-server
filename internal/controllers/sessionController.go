@@ -14,7 +14,7 @@ import (
 	"strings"
 
 	"github.com/aafxr/tg-bot-server/internal/apiserver"
-	"github.com/aafxr/tg-bot-server/internal/models"
+	modelsv2 "github.com/aafxr/tg-bot-server/internal/models_v2"
 	"github.com/aafxr/tg-bot-server/internal/types"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -43,21 +43,21 @@ func StartSession(s *apiserver.Server) func(*gin.Context) {
 		p, _ := url.ParseQuery(string(data))
 		us := p.Get("user")
 
-		u := models.AppUser{}
+		u := modelsv2.AppUser{}
 		json.Unmarshal([]byte(us), &u.TgUser)
-		u.TgId = u.TgUser.ID
+		u.TgUserID = u.TgUser.ID
 
 		if err := s.DB.Model(&u).Preload("TgUser").Where(&u).First(&u).Error; err != nil {
-			if err == gorm.ErrRecordNotFound {
-				ctx.AbortWithStatusJSON(http.StatusNotFound, types.Response{Ok: false, Message: "User not found. Type /start in telegram chat bot "})
+			if err != gorm.ErrRecordNotFound {
+				// ctx.AbortWithStatusJSON(http.StatusNotFound, types.Response{Ok: false, Message: "User not found. Type /start in telegram chat bot "})
+				// return
+				ctx.AbortWithStatusJSON(http.StatusNotFound, types.Response{Ok: false, Message: err.Error()})
 				return
 			}
-			ctx.AbortWithStatusJSON(http.StatusNotFound, types.Response{Ok: false, Message: err.Error()})
-			return
 		}
 
-		session := models.Session{AppUserId: u.ID, TgId: u.TgUser.ID}
-		if err := s.DB.Where("tg_id = ?", session.TgId).First(&session).Error; err != nil {
+		session := modelsv2.Session{AppUserID: u.ID, TgUserID: u.TgUser.ID}
+		if err := s.DB.Where("tg_user_id = ?", session.TgUserID).First(&session).Error; err != nil {
 			log.Println(err)
 			session.ID = uuid.New().String()
 			s.DB.Omit(clause.Associations).Create(&session)
