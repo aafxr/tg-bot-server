@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"slices"
-	"strings"
 	"time"
 
 	"github.com/aafxr/tg-bot-server/internal/apiserver"
@@ -57,11 +55,11 @@ func main() {
 		AllowHeaders:     []string{"Origin"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
-		AllowOriginFunc: func(origin string) bool {
-			return slices.ContainsFunc([]string{"localhost", "postman", "127.0.0.1"}, func(s string) bool {
-				return strings.Contains(origin, s)
-			})
-		},
+		// AllowOriginFunc: func(origin string) bool {
+		// 	return slices.ContainsFunc([]string{"localhost", "postman", "127.0.0.1"}, func(s string) bool {
+		// 		return strings.Contains(origin, s)
+		// 	})
+		// },
 		MaxAge: 12 * time.Hour,
 	}))
 
