@@ -48,7 +48,8 @@ func main() {
 
 	go b.Run()
 
-	r := gin.New()
+	baseRouter := gin.New()
+	r := baseRouter.Group("/api")
 
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},
@@ -57,10 +58,9 @@ func main() {
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
 		AllowOriginFunc: func(origin string) bool {
-			slices.ContainsFunc([]string{"localhost", "postman"}, func(s string) bool {
+			return slices.ContainsFunc([]string{"localhost", "postman", "127.0.0.1"}, func(s string) bool {
 				return strings.Contains(origin, s)
 			})
-			return origin == "https://github.com"
 		},
 		MaxAge: 12 * time.Hour,
 	}))
@@ -85,12 +85,13 @@ func main() {
 	{
 		// authRouter.POST("/user", controllers.GetTGUser(s))
 		authRouter.GET("/me", controllers.GetAppUser(s))
+		authRouter.POST("/newOrganization", controllers.NewOrganization(s))
 		authRouter.GET("/myOrganizations", controllers.GetUserOrganizations(s))
 		authRouter.POST("/publishPost", controllers.PublicPost(s, b))
 
 	}
 
-	if err := r.Run(os.Getenv("DOMAIN")); err != nil {
+	if err := baseRouter.Run(os.Getenv("DOMAIN")); err != nil {
 		log.Fatal(err)
 	}
 

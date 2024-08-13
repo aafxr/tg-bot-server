@@ -63,7 +63,7 @@ func StartSession(s *apiserver.Server) func(*gin.Context) {
 			s.DB.Omit(clause.Associations).Create(&session)
 		}
 
-		ctx.SetCookie(s.SeeeionKey, session.ID, 3600*24*365, "", s.Domain, true, true)
+		ctx.SetCookie(s.SeeeionKey, session.ID, 3600*24*365, "", s.Domain, false, false)
 		ctx.JSON(http.StatusOK, types.Response{Ok: true})
 	}
 }

@@ -33,3 +33,9 @@ func GetUserOrganizations(s *apiserver.Server) func(*gin.Context) {
 		ctx.JSON(http.StatusOK, types.Response{Ok: true, Data: orgs})
 	}
 }
+
+func NewOrganization(s *apiserver.Server) func(*gin.Context) {
+	return func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, types.Response{Ok: true})
+	}
+}
