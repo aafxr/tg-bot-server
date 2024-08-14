@@ -80,7 +80,7 @@ func main() {
 
 	r.Static("/assets", "./assets")
 
-	// r.GET("/catalog", controllers.GetCatalogHandler(s))
+	r.GET("/catalog", controllers.GetCatalogHandler(s))
 	r.GET("/product/:product_id", controllers.GetProduct(s))
 	r.GET("/products", controllers.GetProductsList(s))
 

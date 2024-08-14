@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/aafxr/tg-bot-server/internal/apiserver"
-	models "github.com/aafxr/tg-bot-server/internal/models_v2"
+	modelsv2 "github.com/aafxr/tg-bot-server/internal/models_v2"
 	"github.com/aafxr/tg-bot-server/internal/types"
 	"github.com/gin-gonic/gin"
 )
@@ -19,14 +19,38 @@ type APiProduct struct {
 
 func GetCatalogHandler(s *apiserver.Server) func(*gin.Context) {
 	return func(c *gin.Context) {
-		var products []APiProduct
-		res := s.DB.Model(&models.Product{}).Find(&products)
-		if res.Error != nil {
-			c.AbortWithStatusJSON(http.StatusInternalServerError, types.Response{Ok: false, Message: "server error"})
+		result := make(map[string]interface{})
+
+		var products []modelsv2.Product
+		if err := s.DB.Preload("Properties").Preload("Photo").Find(&products).Error; err != nil {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, types.Response{Ok: false, Message: err.Error()})
 			return
 		}
 
-		c.JSON(http.StatusOK, types.Response{Ok: true, Data: products})
+		result["elements"] = products
+
+		articles := []modelsv2.Article{}
+		if err := s.DB.Find(&articles).Error; err != nil {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, types.Response{Ok: false, Message: err.Error()})
+			return
+		}
+
+		am := make(map[string]string, len(articles))
+		for _, el := range articles {
+			am[el.Name] = el.ProductID
+		}
+
+		result["article"] = am
+
+		sections := []modelsv2.Section{}
+		if err := s.DB.Find(&sections).Error; err != nil {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, types.Response{Ok: false, Message: err.Error()})
+			return
+		}
+
+		result["sections"] = sections
+
+		c.JSON(http.StatusOK, types.Response{Ok: true, Data: result})
 
 	}
 }

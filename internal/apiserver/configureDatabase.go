@@ -33,7 +33,9 @@ func configureDatabase(dsn string) (*gorm.DB, error) {
 		&modelsv2.Order{},
 		&modelsv2.OrderItem{},
 		&modelsv2.Organization{},
+		//-----------------------
 		&modelsv2.Session{},
+		//-----------------------
 		&modelsv2.Product{},
 		&modelsv2.Property{},
 		&modelsv2.Photo{},
@@ -41,6 +43,11 @@ func configureDatabase(dsn string) (*gorm.DB, error) {
 		&modelsv2.Section{},
 		&modelsv2.Storehouse{},
 		&modelsv2.StorehouseProduct{},
+		//-----------------------
+		&modelsv2.ProductDetail{},
+		&modelsv2.Balance{},
+		&modelsv2.Price{},
+		&modelsv2.Transit{},
 	)
 
 	return db, nil

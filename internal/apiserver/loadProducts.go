@@ -145,8 +145,6 @@ func (s *Server) LoadProducts() {
 
 						if e := s.DB.Create(&sec).Error; e != nil {
 							log.Println(e.Error())
-							log.Println("-------------------")
-							log.Println(sec.Items)
 						}
 					}
 				} else {
