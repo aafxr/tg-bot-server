@@ -8,6 +8,7 @@ import (
 	models "github.com/aafxr/tg-bot-server/internal/models_v2"
 	"github.com/aafxr/tg-bot-server/internal/types"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 func GetProduct(s *apiserver.Server) func(*gin.Context) {
@@ -18,9 +19,12 @@ func GetProduct(s *apiserver.Server) func(*gin.Context) {
 			return
 		}
 		p := models.Product{ID: prodId}
-		res := s.DB.Preload("Photo").Preload("Properties").First(&p)
-		if res.Error != nil {
-			ctx.AbortWithStatusJSON(http.StatusInternalServerError, types.Response{Ok: false, Message: res.Error.Error()})
+		if err := s.DB.Preload("Photo").Preload("Properties").First(&p).Error; err != nil {
+			if err == gorm.ErrRecordNotFound {
+				ctx.AbortWithStatusJSON(http.StatusNotFound, types.Response{Ok: false, Message: err.Error()})
+				return
+			}
+			ctx.AbortWithStatusJSON(http.StatusInternalServerError, types.Response{Ok: false, Message: err.Error()})
 			return
 		}
 
