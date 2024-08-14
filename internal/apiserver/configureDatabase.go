@@ -37,6 +37,8 @@ func configureDatabase(dsn string) (*gorm.DB, error) {
 		&modelsv2.Product{},
 		&modelsv2.Property{},
 		&modelsv2.Photo{},
+		&modelsv2.Article{},
+		&modelsv2.Section{},
 		&modelsv2.Storehouse{},
 		&modelsv2.StorehouseProduct{},
 	)

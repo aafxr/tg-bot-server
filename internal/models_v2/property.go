@@ -1,11 +1,9 @@
 package modelsv2
 
-import "gorm.io/gorm"
-
 type Property struct {
-	gorm.Model
-	ID        string `json:"id" gorm:"id;type:varchar(255);primaryKey;"`
-	Name      string `json:"name" gorm:"name"`
-	Value     string `json:"value" gorm:"value"`
-	ProductID string `gorm:"type:varchar(255)"`
+	ID        uint   `json:"-" gorm:"autoIncrement;primaryKey;unsigned"`
+	ProductID string `json:"id" gorm:"type:varchar(255)"`
+	Name      string `json:"name" gorm:"name;type:varchar(255)"`
+	Value     string `json:"value" gorm:"value;type:varchar(255)"`
+	Code      string `json:"code" gorm:"type:varchar(255)"`
 }
