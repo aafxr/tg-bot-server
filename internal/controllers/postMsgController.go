@@ -7,7 +7,7 @@ import (
 
 	"github.com/aafxr/tg-bot-server/internal/apiserver"
 	"github.com/aafxr/tg-bot-server/internal/botserver"
-	"github.com/aafxr/tg-bot-server/internal/models"
+	models "github.com/aafxr/tg-bot-server/internal/models_v2"
 	"github.com/aafxr/tg-bot-server/internal/types"
 	"github.com/gin-gonic/gin"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"

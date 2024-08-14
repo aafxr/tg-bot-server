@@ -5,8 +5,8 @@ import "gorm.io/gorm"
 type Storehouse struct {
 	gorm.Model
 	ID      uint
-	Country string
-	City    string
-	Address string
-	Geo     string
+	Country string `gorm:"varchar(255)"`
+	City    string `gorm:"varchar(255)"`
+	Address string `gorm:"varchar(255)"`
+	Geo     string `gorm:"varchar(255)"`
 }

@@ -4,8 +4,8 @@ import "gorm.io/gorm"
 
 type AppUser struct {
 	gorm.Model
-	FirstName     string
-	LastName      string
+	FirstName     string         `gorm:"varchar(255)"`
+	LastName      string         `gorm:"varchar(255)"`
 	Phone         string         `josn:"phone" gorm:"column:phone;type:varchar(255)"`
 	Country       string         `josn:"country" gorm:"column:country;type:varchar(255)"`
 	City          string         `josn:"city" gorm:"column:city;type:varchar(255)"`

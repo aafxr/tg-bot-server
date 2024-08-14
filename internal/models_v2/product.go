@@ -1,13 +1,12 @@
 package modelsv2
 
-import "gorm.io/gorm"
-
 type Product struct {
-	gorm.Model
-	ID         uint    `json:"id" gorm:"column:id;type:int;unsigned;auto increment;not null;primaryKey"`
-	Title      string  `json:"title" gorm:"column:title;"`
-	Currency   string  `json:"currency" gorm:"column:currency;"`
-	Price      float32 `json:"price" gorm:"column:price;"`
-	Preview    string  `json:"preview" gorm:"column:preview;"`
-	Properties []Property
+	ID         string     `json:"id" gorm:"column:id;type:varchar(255);not null;primaryKey"`
+	ApiCode    string     `json:"apiCode"`
+	ApiUID     *string    `json:"apiUID"`
+	Currency   string     `json:"currency" gorm:"column:currency;"`
+	Price      string     `json:"price" gorm:"column:price;"`
+	Preview    string     `json:"preview" gorm:"column:preview;"`
+	Photo      []Photo    `json:"photo"`
+	Properties []Property `json:"properties"`
 }

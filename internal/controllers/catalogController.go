@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/aafxr/tg-bot-server/internal/apiserver"
-	"github.com/aafxr/tg-bot-server/internal/models"
+	models "github.com/aafxr/tg-bot-server/internal/models_v2"
 	"github.com/aafxr/tg-bot-server/internal/types"
 	"github.com/gin-gonic/gin"
 )

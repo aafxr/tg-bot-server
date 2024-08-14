@@ -34,10 +34,20 @@ func init() {
 }
 
 func main() {
+	// gin.DisableConsoleColor()
+
+	// // Logging to a file.
+	// f, _ := os.Create("gin.log")
+	// defer f.Close()
+	// gin.DefaultWriter = io.MultiWriter(f)
+
 	s, err := apiserver.NewServer(dsn)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	gin.SetMode(gin.ReleaseMode)
+	s.LoadDBData()
 
 	b, err := botserver.NewBotServer(s)
 	if err != nil {
@@ -70,24 +80,25 @@ func main() {
 
 	r.Static("/assets", "./assets")
 
-	r.GET("/catalog", controllers.GetCatalogHandler(s))
-	r.GET("/catalog/:product_id/details", controllers.GetProduct(s))
+	// r.GET("/catalog", controllers.GetCatalogHandler(s))
+	r.GET("/product/:product_id", controllers.GetProduct(s))
+	r.GET("/products", controllers.GetProductsList(s))
 
-	r.POST("/session", controllers.StartSession(s))
+	// r.POST("/session", controllers.StartSession(s))
 
-	r.GET("/test", controllers.Test)
-	r.POST("/upload", controllers.UploadFile(s))
+	// r.GET("/test", controllers.Test)
+	// r.POST("/upload", controllers.UploadFile(s))
 
-	authRouter := r.Group("")
-	authRouter.Use(midlewares.SessionCheckMW(s))
-	{
-		// authRouter.POST("/user", controllers.GetTGUser(s))
-		authRouter.GET("/me", controllers.GetAppUser(s))
-		authRouter.POST("/newOrganization", controllers.NewOrganization(s))
-		authRouter.GET("/myOrganizations", controllers.GetUserOrganizations(s))
-		authRouter.POST("/publishPost", controllers.PublicPost(s, b))
+	// authRouter := r.Group("")
+	// authRouter.Use(midlewares.SessionCheckMW(s))
+	// {
+	// 	// authRouter.POST("/user", controllers.GetTGUser(s))
+	// 	authRouter.GET("/me", controllers.GetAppUser(s))
+	// 	authRouter.POST("/newOrganization", controllers.NewOrganization(s))
+	// 	authRouter.GET("/myOrganizations", controllers.GetUserOrganizations(s))
+	// 	authRouter.POST("/publishPost", controllers.PublicPost(s, b))
 
-	}
+	// }
 
 	if err := baseRouter.Run(os.Getenv("DOMAIN")); err != nil {
 		log.Fatal(err)
