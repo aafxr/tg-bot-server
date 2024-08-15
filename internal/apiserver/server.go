@@ -33,5 +33,6 @@ func (s *Server) Start() {
 
 func (s *Server) LoadDBData() {
 	s.LoadProducts()
+	s.LoadDetails()
 
 }
