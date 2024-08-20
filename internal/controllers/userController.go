@@ -155,7 +155,7 @@ func AppUserUpdateCompany(s *apiserver.Server) func(*gin.Context) {
 			return
 		}
 
-		if err := s.DB.Find(&company).Error; err != nil {
+		if err := s.DB.Select("created_at").First(&company).Error; err != nil {
 			log.Println(err.Error())
 		}
 
