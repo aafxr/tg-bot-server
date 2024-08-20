@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"io"
+	"log"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -73,5 +74,147 @@ func GetAppUserCompanies(s *apiserver.Server) func(*gin.Context) {
 
 		ctx.JSON(http.StatusOK, types.Response{Ok: true, Data: au.Organizations})
 
+	}
+}
+
+func AppUserNewCompany(s *apiserver.Server) func(*gin.Context) {
+	return func(ctx *gin.Context) {
+		uid := ctx.Query("uid")
+		if uid == "" {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, types.Response{Ok: false, Message: "unauthorizet"})
+			return
+		}
+
+		id, err := strconv.Atoi(uid)
+		if err != nil {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, types.Response{Ok: false, Message: "unauthorizet"})
+			return
+		}
+
+		company := models.Organization{AppUserID: uint(id)}
+
+		data, err := io.ReadAll(ctx.Request.Body)
+		if err != nil {
+			ctx.AbortWithError(http.StatusBadRequest, err)
+			return
+		}
+
+		if err := json.Unmarshal(data, &company); err != nil {
+			ctx.AbortWithError(http.StatusBadRequest, err)
+			return
+		}
+
+		company.ID = 0
+
+		ok, err := company.Validate()
+		if err != nil || !ok {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, types.Response{Ok: false, Message: err.Error()})
+			return
+		}
+
+		if err := s.DB.Create(&company).Error; err != nil {
+			ctx.AbortWithError(http.StatusInternalServerError, err)
+			return
+		}
+
+		ctx.JSON(http.StatusOK, types.Response{Ok: true, Data: company})
+
+	}
+}
+
+func AppUserUpdateCompany(s *apiserver.Server) func(*gin.Context) {
+	return func(ctx *gin.Context) {
+		uid := ctx.Query("uid")
+		if uid == "" {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, types.Response{Ok: false, Message: "unauthorizet"})
+			return
+		}
+
+		id, err := strconv.Atoi(uid)
+		if err != nil {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, types.Response{Ok: false, Message: "unauthorizet"})
+			return
+		}
+
+		company := models.Organization{AppUserID: uint(id)}
+
+		data, err := io.ReadAll(ctx.Request.Body)
+		if err != nil {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, types.Response{Ok: false, Message: err.Error()})
+			return
+		}
+
+		if err := json.Unmarshal(data, &company); err != nil {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, types.Response{Ok: false, Message: err.Error()})
+			return
+		}
+
+		ok, err := company.Validate()
+		if err != nil || !ok {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, types.Response{Ok: false, Message: err.Error()})
+			return
+		}
+
+		if err := s.DB.Find(&company).Error; err != nil {
+			log.Println(err.Error())
+		}
+
+		if err := s.DB.Save(&company).Error; err != nil {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, types.Response{Ok: false, Message: err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, types.Response{Ok: true, Data: company})
+	}
+}
+
+func AppUserRemoveCompany(s *apiserver.Server) func(*gin.Context) {
+	return func(ctx *gin.Context) {
+		uid := ctx.Query("uid")
+		if uid == "" {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, types.Response{Ok: false, Message: "unauthorizet"})
+			return
+		}
+
+		id, err := strconv.Atoi(uid)
+		if err != nil {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, types.Response{Ok: false, Message: "unauthorizet"})
+			return
+		}
+
+		company := models.Organization{AppUserID: uint(id)}
+
+		data, err := io.ReadAll(ctx.Request.Body)
+		if err != nil {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, types.Response{Ok: false, Message: err.Error()})
+			return
+		}
+
+		if err := json.Unmarshal(data, &company); err != nil {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, types.Response{Ok: false, Message: err.Error()})
+			return
+		}
+
+		ok, err := company.Validate()
+		if err != nil || !ok {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, types.Response{Ok: false, Message: err.Error()})
+			return
+		}
+
+		if err := s.DB.Find(&company).Error; err != nil {
+			log.Println(err.Error())
+		}
+
+		if company.AppUserID != uint(id) {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, types.Response{Ok: false, Message: "permission denied"})
+			return
+		}
+
+		if err := s.DB.Delete(&company).Error; err != nil {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, types.Response{Ok: false, Message: err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, types.Response{Ok: true, Data: true})
 	}
 }

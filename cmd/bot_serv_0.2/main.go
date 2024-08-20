@@ -4,13 +4,11 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"time"
 
 	"github.com/aafxr/tg-bot-server/internal/apiserver"
 	"github.com/aafxr/tg-bot-server/internal/botserver"
 	"github.com/aafxr/tg-bot-server/internal/controllers"
 	"github.com/aafxr/tg-bot-server/internal/midlewares"
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
@@ -57,24 +55,12 @@ func main() {
 	go b.Run()
 
 	baseRouter := gin.New()
+
+	baseRouter.Use(midlewares.CORSMiddleware())
+	baseRouter.Use(gin.Logger())
+	baseRouter.Use(gin.Recovery())
+
 	r := baseRouter.Group("/api")
-
-	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"*"},
-		AllowMethods:     []string{"PUT", "PATCH"},
-		AllowHeaders:     []string{"Origin"},
-		ExposeHeaders:    []string{"Content-Length"},
-		AllowCredentials: true,
-		// AllowOriginFunc: func(origin string) bool {
-		// 	return slices.ContainsFunc([]string{"localhost", "postman", "127.0.0.1"}, func(s string) bool {
-		// 		return strings.Contains(origin, s)
-		// 	})
-		// },
-		MaxAge: 12 * time.Hour,
-	}))
-
-	r.Use(gin.Logger())
-	r.Use(gin.Recovery())
 
 	r.Use(midlewares.UserLoadMW(s))
 
@@ -85,23 +71,11 @@ func main() {
 	r.GET("/products", controllers.GetProductsList(s))
 
 	r.POST("/me", controllers.GetAppUser(s))
-	r.GET("companies", controllers.GetAppUserCompanies(s))
 
-	// r.POST("/session", controllers.StartSession(s))
-
-	// r.GET("/test", controllers.Test)
-	// r.POST("/upload", controllers.UploadFile(s))
-
-	// authRouter := r.Group("")
-	// authRouter.Use(midlewares.SessionCheckMW(s))
-	// {
-	// 	// authRouter.POST("/user", controllers.GetTGUser(s))
-	// 	authRouter.GET("/me", controllers.GetAppUser(s))
-	// 	authRouter.POST("/newOrganization", controllers.NewOrganization(s))
-	// 	authRouter.GET("/myOrganizations", controllers.GetUserOrganizations(s))
-	// 	authRouter.POST("/publishPost", controllers.PublicPost(s, b))
-
-	// }
+	r.GET("/companies", controllers.GetAppUserCompanies(s))
+	r.POST("/company/new", controllers.AppUserNewCompany(s))
+	r.POST("/company/update", controllers.AppUserUpdateCompany(s))
+	r.POST("/company/remove", controllers.AppUserRemoveCompany(s))
 
 	if err := baseRouter.Run(os.Getenv("DOMAIN")); err != nil {
 		log.Fatal(err)
