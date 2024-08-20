@@ -12,7 +12,7 @@ import (
 
 func (b *BotServer) handleStart(update tgbotapi.Update) error {
 	u := update.SentFrom()
-	appUser := models.AppUser{TgUserID: uint(u.ID)}
+	appUser := models.AppUser{TgUser: modelsv2.TgUser{ID: uint(u.ID)}}
 
 	res := b.s.DB.First(&appUser)
 	if res.Error != nil {
@@ -63,7 +63,7 @@ func (b *BotServer) handleHelp(update tgbotapi.Update) error {
 func (b *BotServer) handleCompanies(update tgbotapi.Update) error {
 	chatId := update.FromChat().ID
 	var msg tgbotapi.MessageConfig
-	u := modelsv2.AppUser{TgUserID: uint(update.SentFrom().ID)}
+	u := modelsv2.AppUser{TgUser: modelsv2.TgUser{ID: uint(update.SentFrom().ID)}}
 
 	if err := b.s.DB.Model(&u).Preload("Organizations").Where(&u).First(&u).Error; err != nil {
 		msg = tgbotapi.NewMessage(chatId, "Не удалось найти запись о пользоватле")

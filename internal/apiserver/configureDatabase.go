@@ -37,17 +37,17 @@ func configureDatabase(dsn string) (*gorm.DB, error) {
 		&modelsv2.Session{},
 		//-----------------------
 		&modelsv2.Product{},
-		&modelsv2.Property{},
-		&modelsv2.Photo{},
+		// &modelsv2.Property{},
+		// &modelsv2.Photo{},
 		&modelsv2.Article{},
 		&modelsv2.Section{},
 		&modelsv2.Storehouse{},
 		&modelsv2.StorehouseProduct{},
 		//-----------------------
 		&modelsv2.ProductDetail{},
-		&modelsv2.Balance{},
-		&modelsv2.Price{},
-		&modelsv2.Transit{},
+		// &modelsv2.Balance{},
+		// &modelsv2.Price{},
+		// &modelsv2.Transit{},
 	)
 
 	return db, nil

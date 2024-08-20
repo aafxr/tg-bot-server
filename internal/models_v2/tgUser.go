@@ -6,4 +6,5 @@ type TgUser struct {
 	LastName  string `json:"last_name"  gorm:"column:last_name;varchar(255)"`
 	Nickname  string `json:"nickname"   gorm:"column:nickname;varchar(255)"`
 	Photo     string `json:"photo"      gorm:"column:photo;varchar(255)"`
+	AppUserID uint
 }

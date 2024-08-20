@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"reflect"
 	"slices"
 	"strings"
 
@@ -75,19 +76,34 @@ func (s *Server) LoadProducts() {
 						}
 					}
 
+					// for _, e := range elements {
+					// 	if e.ID == "" {
+					// 		continue
+					// 	}
+					// 	res := s.DB.Save(&e)
+					// 	if res.Error != nil {
+					// 		log.Println(e.ID, " ", res.Error.Error())
+					// 	}
+
+					// }
+
+					// res := s.DB.Save(elements)
+
+					// log.Println("RowsAffected ", res.RowsAffected)
+
 					for _, el := range elements {
 						if err := s.DB.Create(&el).Error; err != nil {
 							log.Println(err.Error())
-							if len(el.Properties) > 0 {
-								if err := s.DB.Create(&el.Properties).Error; err != nil {
-									log.Println(err.Error())
-								}
-							}
-							if len(el.Photo) > 0 {
-								if err := s.DB.Create(&el.Photo).Error; err != nil {
-									log.Println(err.Error())
-								}
-							}
+							// if len(el.Properties) > 0 {
+							// 	if err := s.DB.Create(&el.Properties).Error; err != nil {
+							// 		log.Println(err.Error())
+							// 	}
+							// }
+							// if len(el.Photo) > 0 {
+							// 	if err := s.DB.Create(&el.Photo).Error; err != nil {
+							// 		log.Println(err.Error())
+							// 	}
+							// }
 						}
 					}
 				} else {
@@ -132,6 +148,11 @@ func (s *Server) LoadProducts() {
 				if sMap, ok := result["sections"].([]interface{}); ok {
 					for _, v := range sMap {
 						sec := modelsv2.Section{}
+
+						parent := v.(map[string]interface{})["parent"]
+						if reflect.ValueOf(parent).Kind() != reflect.String {
+							v.(map[string]interface{})["parent"] = ""
+						}
 						d, e := json.Marshal(v)
 						if e != nil {
 							log.Println(e.Error())

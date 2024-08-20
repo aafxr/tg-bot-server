@@ -45,7 +45,7 @@ func StartSession(s *apiserver.Server) func(*gin.Context) {
 
 		u := modelsv2.AppUser{}
 		json.Unmarshal([]byte(us), &u.TgUser)
-		u.TgUserID = u.TgUser.ID
+		u.TgUser.ID = u.TgUser.ID
 
 		if err := s.DB.Model(&u).Preload("TgUser").Where(&u).First(&u).Error; err != nil {
 			if err != gorm.ErrRecordNotFound {

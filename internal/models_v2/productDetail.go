@@ -12,8 +12,8 @@ type ProductDetail struct {
 	ProductName              string    `json:"ProductName" gorm:"type:varchar(255)"`
 	TransitAmount            string    `json:"TransitAmount" gorm:"type:varchar(255)"`
 	UnitOfMeasure            string    `json:"UnitOfMeasure" gorm:"type:varchar(255)"`
-	Price_MRC                Price     `json:"Price_MRC" gorm:""`
-	Price_RRC                Price     `json:"Price_RRC" gorm:""`
-	Balance_Strings          []Balance `json:"Balance_Strings" gorm:""`
-	Transit                  Transit   `json:"Transit" gorm:""`
+	Price_MRC                Price     `json:"Price_MRC" gorm:"type:json;serializer:json"`
+	Price_RRC                Price     `json:"Price_RRC" gorm:"type:json;serializer:json"`
+	Balance_Strings          []Balance `json:"Balance_Strings" gorm:"type:json;serializer:json"`
+	Transit                  Transit   `json:"Transit" gorm:"type:json;serializer:json"`
 }

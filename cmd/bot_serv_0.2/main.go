@@ -46,7 +46,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	gin.SetMode(gin.ReleaseMode)
+	// gin.SetMode(gin.ReleaseMode)
 	s.LoadDBData()
 
 	b, err := botserver.NewBotServer(s)
@@ -83,6 +83,9 @@ func main() {
 	r.GET("/catalog", controllers.GetCatalogHandler(s))
 	r.GET("/product/:product_id", controllers.GetProduct(s))
 	r.GET("/products", controllers.GetProductsList(s))
+
+	r.POST("/me", controllers.GetAppUser(s))
+	r.GET("companies", controllers.GetAppUserCompanies(s))
 
 	// r.POST("/session", controllers.StartSession(s))
 

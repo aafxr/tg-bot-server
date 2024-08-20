@@ -11,9 +11,6 @@ import (
 	modelsv2 "github.com/aafxr/tg-bot-server/internal/models_v2"
 )
 
-type detailsApi struct {
-}
-
 func (s *Server) LoadDetails() {
 	m := make(map[string]bool, 10)
 	var prodList []modelsv2.Product
@@ -41,22 +38,33 @@ func (s *Server) LoadDetails() {
 
 	log.Println("details loaded: ", len(details))
 
+	// for _, d := range details {
+	// 	if d.ApiCode == "" {
+	// 		continue
+	// 	}
+	// 	res := s.DB.Save(&d)
+	// 	log.Println(d.ProductID, " ", res.Error.Error())
+
+	// }
+	// res := s.DB.Save(details)
+	// log.Println("details rows affected", res.RowsAffected)
+
 	for _, d := range details {
-		if err := s.DB.Omit("Price_MRC", "Price_RRC", "Balance_Strings", "Transit").Create(&d).Error; err != nil {
+		if err := s.DB.Create(&d).Error; err != nil {
 			log.Println(err.Error())
 		}
-		if err := s.DB.Create(&d.Price_MRC).Error; err != nil {
-			log.Println(err.Error())
-		}
-		if err := s.DB.Create(&d.Price_RRC).Error; err != nil {
-			log.Println(err.Error())
-		}
-		if err := s.DB.Create(&d.Balance_Strings).Error; err != nil {
-			log.Println(err.Error())
-		}
-		if err := s.DB.Create(&d.Transit).Error; err != nil {
-			log.Println(err.Error())
-		}
+		// if err := s.DB.Create(&d.Price_MRC).Error; err != nil {
+		// 	log.Println(err.Error())
+		// }
+		// if err := s.DB.Create(&d.Price_RRC).Error; err != nil {
+		// 	log.Println(err.Error())
+		// }
+		// if err := s.DB.Create(&d.Balance_Strings).Error; err != nil {
+		// 	log.Println(err.Error())
+		// }
+		// if err := s.DB.Create(&d.Transit).Error; err != nil {
+		// 	log.Println(err.Error())
+		// }
 
 	}
 
