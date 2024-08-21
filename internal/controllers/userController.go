@@ -218,3 +218,26 @@ func AppUserRemoveCompany(s *apiserver.Server) func(*gin.Context) {
 		ctx.JSON(http.StatusOK, types.Response{Ok: true, Data: true})
 	}
 }
+
+func AppUserUpdate(s *apiserver.Server) func(*gin.Context) {
+	return func(ctx *gin.Context) {
+		data, err := io.ReadAll(ctx.Request.Body)
+		if err != nil {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, types.Response{Ok: false, Message: err.Error()})
+			return
+		}
+
+		u := models.AppUser{}
+		if err := json.Unmarshal(data, &u); err != nil {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, types.Response{Ok: false, Message: err.Error()})
+			return
+		}
+
+		if err := s.DB.Omit("created_at").Save(&u).Error; err != nil {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, types.Response{Ok: false, Message: err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, types.Response{Ok: true, Data: u})
+	}
+}
