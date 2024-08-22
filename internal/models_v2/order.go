@@ -15,6 +15,7 @@ type Client struct {
 
 type Order struct {
 	gorm.Model
+	ID             uint        `json:"id" gorm:"primatyKey;unsigned;autoIncrement"`
 	AppUserID      uint        `json:"userID"`
 	Status         string      `json:"status" gorm:"column:status;type:varchar(255);"`
 	Comment        string      `json:"comment"`
