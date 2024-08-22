@@ -66,19 +66,24 @@ func main() {
 
 	r.Static("/assets", "./assets")
 
+	r.POST("/auth", controllers.AuthTGInitData(s))
+
 	r.GET("/catalog", controllers.GetCatalogHandler(s))
 	r.GET("/product/:product_id", controllers.GetProduct(s))
 	r.GET("/products", controllers.GetProductsList(s))
 
-	r.POST("/me", controllers.GetAppUser(s))
-	r.POST("/user/update", controllers.AppUserUpdate(s))
+	authRoutes := r.Group("")
+	authRoutes.Use(midlewares.CheckAuth(s))
 
-	r.POST("/order/new", controllers.NewOrder(s))
+	authRoutes.POST("/me", controllers.GetAppUser(s))
+	authRoutes.POST("/user/update", controllers.AppUserUpdate(s))
 
-	r.GET("/companies", controllers.GetAppUserCompanies(s))
-	r.POST("/company/new", controllers.AppUserNewCompany(s))
-	r.POST("/company/update", controllers.AppUserUpdateCompany(s))
-	r.POST("/company/remove", controllers.AppUserRemoveCompany(s))
+	authRoutes.POST("/order/new", controllers.NewOrder(s))
+
+	authRoutes.GET("/companies", controllers.GetAppUserCompanies(s))
+	authRoutes.POST("/company/new", controllers.AppUserNewCompany(s))
+	authRoutes.POST("/company/update", controllers.AppUserUpdateCompany(s))
+	authRoutes.POST("/company/remove", controllers.AppUserRemoveCompany(s))
 
 	if err := baseRouter.Run(os.Getenv("DOMAIN")); err != nil {
 		log.Fatal(err)

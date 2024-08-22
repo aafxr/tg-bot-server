@@ -11,6 +11,7 @@ type Server struct {
 	Token      string
 	SeeeionKey string
 	Domain     string
+	JWTSignKey string
 }
 
 func NewServer(dsn string) (*Server, error) {
@@ -24,6 +25,7 @@ func NewServer(dsn string) (*Server, error) {
 		Token:      os.Getenv("BOT_TOKEN"),
 		SeeeionKey: os.Getenv("SESSEION_KEY"),
 		Domain:     os.Getenv("DOMAIN"),
+		JWTSignKey: "zhfunssnqfjbpidtrokvsksrspxfhzxelxsruegjawfkyhqgyu",
 	}, nil
 }
 

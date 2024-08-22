@@ -79,7 +79,8 @@ func GetAppUserCompanies(s *apiserver.Server) func(*gin.Context) {
 
 func AppUserNewCompany(s *apiserver.Server) func(*gin.Context) {
 	return func(ctx *gin.Context) {
-		uid := ctx.Query("uid")
+		_uid, _ := ctx.Get("uid")
+		uid := _uid.(string)
 		if uid == "" {
 			ctx.AbortWithStatusJSON(http.StatusBadRequest, types.Response{Ok: false, Message: "unauthorizet"})
 			return
@@ -124,7 +125,8 @@ func AppUserNewCompany(s *apiserver.Server) func(*gin.Context) {
 
 func AppUserUpdateCompany(s *apiserver.Server) func(*gin.Context) {
 	return func(ctx *gin.Context) {
-		uid := ctx.Query("uid")
+		_uid, _ := ctx.Get("uid")
+		uid := _uid.(string)
 		if uid == "" {
 			ctx.AbortWithStatusJSON(http.StatusBadRequest, types.Response{Ok: false, Message: "unauthorizet"})
 			return
@@ -170,7 +172,8 @@ func AppUserUpdateCompany(s *apiserver.Server) func(*gin.Context) {
 
 func AppUserRemoveCompany(s *apiserver.Server) func(*gin.Context) {
 	return func(ctx *gin.Context) {
-		uid := ctx.Query("uid")
+		_uid, _ := ctx.Get("uid")
+		uid := _uid.(string)
 		if uid == "" {
 			ctx.AbortWithStatusJSON(http.StatusBadRequest, types.Response{Ok: false, Message: "unauthorizet"})
 			return
