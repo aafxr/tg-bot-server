@@ -73,6 +73,8 @@ func main() {
 	r.POST("/me", controllers.GetAppUser(s))
 	r.POST("/user/update", controllers.AppUserUpdate(s))
 
+	r.POST("/order/new", controllers.NewOrder(s))
+
 	r.GET("/companies", controllers.GetAppUserCompanies(s))
 	r.POST("/company/new", controllers.AppUserNewCompany(s))
 	r.POST("/company/update", controllers.AppUserUpdateCompany(s))

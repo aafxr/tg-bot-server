@@ -41,7 +41,7 @@ func GetAppUser(s *apiserver.Server) func(*gin.Context) {
 			TgUser: tgUser,
 		}
 
-		if err := s.DB.Preload("TgUser").First(&user).Error; err != nil {
+		if err := s.DB.Preload("Organizations").Preload("Orders").Preload("TgUser").First(&user).Error; err != nil {
 			ctx.AbortWithStatusJSON(http.StatusBadRequest, types.Response{Ok: false, Message: "unauthorizet"})
 			return
 		}
