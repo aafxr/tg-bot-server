@@ -2,7 +2,6 @@ package midlewares
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/aafxr/tg-bot-server/internal/apiserver"
@@ -40,8 +39,5 @@ func CheckAuth(s *apiserver.Server) gin.HandlerFunc {
 		uid := t.Header["uid"]
 
 		ctx.Set("uid", uid)
-
-		log.Println("uid: ", uid)
-
 	}
 }
