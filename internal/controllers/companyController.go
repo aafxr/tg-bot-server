@@ -10,6 +10,7 @@ import (
 	modelsv2 "github.com/aafxr/tg-bot-server/internal/models_v2"
 	"github.com/aafxr/tg-bot-server/internal/types"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 func NewCompany(s *apiserver.Server) func(*gin.Context) {
@@ -151,5 +152,37 @@ func RemoveCompany(s *apiserver.Server) func(*gin.Context) {
 		}
 
 		ctx.JSON(http.StatusOK, types.Response{Ok: true, Data: true})
+	}
+}
+
+// expect AppUser id named as "uid" in query params
+func GetCompanies(s *apiserver.Server) func(*gin.Context) {
+	return func(ctx *gin.Context) {
+		u, ok := ctx.Get("user")
+		if !ok {
+			ctx.AbortWithStatus(http.StatusUnauthorized)
+			return
+		}
+		var user modelsv2.AppUser
+
+		user, ok = u.(modelsv2.AppUser)
+		if !ok {
+			ctx.AbortWithStatus(http.StatusUnauthorized)
+			return
+		}
+
+		au := modelsv2.AppUser{ID: uint(user.ID)}
+
+		if err := s.DB.Preload("Organizations").First(&au).Error; err != nil {
+			if err == gorm.ErrRecordNotFound {
+				ctx.JSON(http.StatusOK, types.Response{Ok: true, Data: make([]interface{}, 0)})
+				return
+			}
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, types.Response{Ok: false, Message: err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, types.Response{Ok: true, Data: au.Organizations})
+
 	}
 }

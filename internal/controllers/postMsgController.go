@@ -14,6 +14,9 @@ import (
 	"gorm.io/gorm"
 )
 
+/*
+api для публикации сообцения
+*/
 func PublicPost(s *apiserver.Server, b *botserver.BotServer) func(*gin.Context) {
 	return func(ctx *gin.Context) {
 		var users []models.TgUser

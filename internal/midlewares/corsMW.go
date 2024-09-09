@@ -2,6 +2,9 @@ package midlewares
 
 import "github.com/gin-gonic/gin"
 
+/*
+allow cors middleware
+*/
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")

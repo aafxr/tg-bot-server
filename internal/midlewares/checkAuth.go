@@ -10,6 +10,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+/*
+middleware проверяет авторизацию пользователя по установленному header "Authorization"
+*/
 func CheckAuth(s *apiserver.Server) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 

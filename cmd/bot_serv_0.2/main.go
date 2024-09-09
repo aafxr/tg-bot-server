@@ -81,7 +81,7 @@ func main() {
 	authRoutes.POST("/order/new", controllers.NewOrder(s))
 	authRoutes.GET("/orders", controllers.OrdersList(s))
 
-	authRoutes.GET("/companies", controllers.GetAppUserCompanies(s))
+	authRoutes.GET("/companies", controllers.GetCompanies(s))
 	authRoutes.POST("/company/new", controllers.NewCompany(s))
 	authRoutes.POST("/company/update", controllers.UpdateCompany(s))
 	authRoutes.POST("/company/remove", controllers.RemoveCompany(s))
