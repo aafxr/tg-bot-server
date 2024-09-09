@@ -17,6 +17,11 @@ type APiProduct struct {
 	Preview  string
 }
 
+/*
+method - get
+
+returns - каталог товаров
+*/
 func GetCatalogHandler(s *apiserver.Server) func(*gin.Context) {
 	return func(c *gin.Context) {
 		result := make(map[string]interface{})

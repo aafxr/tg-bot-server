@@ -13,6 +13,10 @@ import (
 )
 
 // expect uid in query params
+/*
+method - post
+returns - возврацает созданный заказ с обновленным полем id
+*/
 func NewOrder(s *apiserver.Server) func(*gin.Context) {
 	return func(ctx *gin.Context) {
 		uid := ctx.Query("uid")

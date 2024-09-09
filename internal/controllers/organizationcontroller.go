@@ -9,6 +9,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+/*
+method - get
+
+returns - список созанных пользователем организаций
+*/
 func GetUserOrganizations(s *apiserver.Server) func(*gin.Context) {
 	return func(ctx *gin.Context) {
 		u, ok := ctx.Get("user")

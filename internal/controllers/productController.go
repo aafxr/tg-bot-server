@@ -11,6 +11,11 @@ import (
 	"gorm.io/gorm"
 )
 
+/*
+ожидает product_id в query параметрах
+
+returns - найденный по переданному коду продукт
+*/
 func GetProduct(s *apiserver.Server) func(*gin.Context) {
 	return func(ctx *gin.Context) {
 		prodId := ctx.Param("product_id")
@@ -37,6 +42,9 @@ func GetProduct(s *apiserver.Server) func(*gin.Context) {
 	}
 }
 
+/*
+возвращает список продуктов
+*/
 func GetProductsList(s *apiserver.Server) func(*gin.Context) {
 	return func(ctx *gin.Context) {
 		var products []models.Product

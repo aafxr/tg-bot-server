@@ -27,6 +27,11 @@ var (
 )
 
 // receive telegram initData as post payload
+/*
+ожидает получить telegram initData в теле запроса
+
+после успешной валидации возвращает сгенерированный токен
+*/
 func AuthTGInitData(s *apiserver.Server) func(*gin.Context) {
 	return func(ctx *gin.Context) {
 		data, err := io.ReadAll(ctx.Request.Body)
@@ -78,6 +83,11 @@ func AuthTGInitData(s *apiserver.Server) func(*gin.Context) {
 	}
 }
 
+/*
+хелпер, проверяет целостность telegram initdata
+
+returns bool, error
+*/
 func validateInitData(data []byte, token string) (bool, error) {
 	var err error
 	var pairs url.Values
@@ -111,6 +121,9 @@ func validateInitData(data []byte, token string) (bool, error) {
 	return true, nil
 }
 
+/*
+кодирование telegram initData по алгоритму sha256
+*/
 func sign(authData, token string) string {
 	skHmac := hmac.New(sha256.New, []byte("WebAppData"))
 	skHmac.Write([]byte(token))
