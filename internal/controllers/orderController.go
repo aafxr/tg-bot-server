@@ -10,6 +10,7 @@ import (
 	modelsv2 "github.com/aafxr/tg-bot-server/internal/models_v2"
 	"github.com/aafxr/tg-bot-server/internal/types"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 // expect uid in query params
@@ -57,6 +58,39 @@ func NewOrder(s *apiserver.Server) func(*gin.Context) {
 
 		if err := s.DB.Save(&o).Error; err != nil {
 			ctx.AbortWithStatusJSON(http.StatusInternalServerError, types.Response{Ok: false, Message: err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, types.Response{Ok: true, Data: o})
+	}
+}
+
+/*
+получение списка всех заказов пользователя
+*/
+func OrdersList(s *apiserver.Server) func(*gin.Context) {
+	return func(ctx *gin.Context) {
+		u, ok := ctx.Get("user")
+		if !ok {
+			ctx.AbortWithStatus(http.StatusUnauthorized)
+			return
+		}
+		var user modelsv2.AppUser
+
+		user, ok = u.(modelsv2.AppUser)
+		if !ok {
+			ctx.AbortWithStatus(http.StatusUnauthorized)
+			return
+		}
+
+		o := []modelsv2.Order{}
+
+		if err := s.DB.Model(&modelsv2.Order{}).Where("app_user_id = ?", user.ID).Find(&o).Error; err != nil {
+			if err == gorm.ErrRecordNotFound {
+				ctx.JSON(http.StatusOK, types.Response{Ok: true, Data: "[]"})
+				return
+			}
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, types.Response{Ok: false, Message: err.Error()})
 			return
 		}
 
