@@ -82,9 +82,9 @@ func main() {
 	authRoutes.GET("/orders", controllers.OrdersList(s))
 
 	authRoutes.GET("/companies", controllers.GetAppUserCompanies(s))
-	authRoutes.POST("/company/new", controllers.AppUserNewCompany(s))
-	authRoutes.POST("/company/update", controllers.AppUserUpdateCompany(s))
-	authRoutes.POST("/company/remove", controllers.AppUserRemoveCompany(s))
+	authRoutes.POST("/company/new", controllers.NewCompany(s))
+	authRoutes.POST("/company/update", controllers.UpdateCompany(s))
+	authRoutes.POST("/company/remove", controllers.RemoveCompany(s))
 
 	if err := baseRouter.Run(os.Getenv("DOMAIN")); err != nil {
 		log.Fatal(err)
