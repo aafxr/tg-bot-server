@@ -17,6 +17,7 @@ import (
 )
 
 // load products from [https://refloor-opt.ru/api/telegram/]
+// сохраняет полученные продукты в локальную бд
 func (s *Server) LoadProducts() {
 	resp, e := http.Get("https://refloor-opt.ru/api/telegram/")
 	if e == nil {
@@ -183,6 +184,9 @@ func (s *Server) LoadProducts() {
 	}
 }
 
+/*
+скачивание изображений в локальную бд
+*/
 func loadPhoto(s string) (string, error) {
 	sl := strings.Split(s, "/")
 	fileName := sl[len(sl)-1]

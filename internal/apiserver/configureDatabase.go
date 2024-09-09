@@ -8,6 +8,13 @@ import (
 	"gorm.io/gorm"
 )
 
+// устанавливат соединение с бд,
+//
+// настраивает параметры подключения к бд
+//
+// выполняет синхронизацию сущностей приложения и таблиц в бд
+//
+// dsn - строка подключения к бд вида: user:pass@tcp(host:port)/dbname?charset=utf8mb4&parseTime=True
 func configureDatabase(dsn string) (*gorm.DB, error) {
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {

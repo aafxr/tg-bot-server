@@ -11,6 +11,13 @@ import (
 	modelsv2 "github.com/aafxr/tg-bot-server/internal/models_v2"
 )
 
+/*
+	 	метод для выгрузки деталей продукта
+
+		выгружает с апи детали продуктов и записывает в локальную бд
+
+	 	@depricated
+*/
 func (s *Server) LoadDetails() {
 	m := make(map[string]bool, 10)
 	var prodList []modelsv2.Product
@@ -73,6 +80,19 @@ func (s *Server) LoadDetails() {
 	}
 }
 
+/*
+функция хелпер
+
+предпологается работа функции в качестве горутины
+
+- code - код продукта
+
+- dt - сущность, описывающая детали продукта
+
+- s - используется для мутации dt
+
+- wg - контроль количества горутин в основном потоке
+*/
 func loadProducDetails(code string, dt *[]modelsv2.ProductDetail, s *sync.Mutex, wg *sync.WaitGroup) (*[]modelsv2.ProductDetail, error) {
 	defer wg.Done()
 	if code == "" {
