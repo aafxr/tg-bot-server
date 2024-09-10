@@ -17,13 +17,13 @@ func GetAppUser(s *apiserver.Server) func(*gin.Context) {
 	return func(ctx *gin.Context) {
 		data, err := io.ReadAll(ctx.Request.Body)
 		if err != nil {
-			ctx.AbortWithStatusJSON(http.StatusBadRequest, types.Response{Ok: false, Message: "unauthorizet"})
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, types.Response{Ok: false, Message: "unauthorizet"})
 			return
 		}
 
 		ok, err := validateInitData(data, s.Token)
 		if !ok || err != nil {
-			ctx.AbortWithStatusJSON(http.StatusBadRequest, types.Response{Ok: false, Message: "unauthorizet"})
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, types.Response{Ok: false, Message: "unauthorizet"})
 			return
 		}
 
@@ -39,7 +39,7 @@ func GetAppUser(s *apiserver.Server) func(*gin.Context) {
 		}
 
 		if err := s.DB.Preload("Organizations").Preload("Orders").Preload("TgUser").First(&user).Error; err != nil {
-			ctx.AbortWithStatusJSON(http.StatusBadRequest, types.Response{Ok: false, Message: "unauthorizet"})
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, types.Response{Ok: false, Message: "unauthorizet"})
 			return
 		}
 
