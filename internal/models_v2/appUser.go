@@ -9,7 +9,7 @@ type AppUser struct {
 	Country       string         `json:"country" gorm:"column:country;type:varchar(255)"`
 	City          string         `json:"city" gorm:"column:city;type:varchar(255)"`
 	TgUser        TgUser         `json:"tgUser,omitempty" gorm:"foreighKey:ID;refference:TgUserID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
-	Storehouse    string         `json:"storehouse" gorm:"column:storehouse;type:varchar(40)"`
+	StorehouseId  string         `json:"storehouseId" gorm:"column:storehouse_id;type:varchar(40)"`
 	Organizations []Organization `json:"organizations,omitempty;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 	Orders        []Order        `json:"orders,omitempty;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 }
